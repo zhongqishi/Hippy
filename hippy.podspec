@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'hippy'
-  s.version          = '2.3.4-kg'
+  s.version          = '2.3.4.1-kg'
   s.summary          = 'hippy lib for ios'
 
 # This description is used to generate tags and improve search results.
@@ -25,12 +25,19 @@ TODO: Add long description of the pod here.
   s.author           = { 'mengyanluo' => 'mengyanluo@tencent.com' }
   s.source           = {:git => 'http://git.code.oa.com/karaoke-cocoapods/GitHippy.git', :tag => s.version}
   s.ios.deployment_target = '8.0'
-  s.source_files = ['ios/sdk/**/*.{h,m,c,mm,s,cpp,cc}', 'core/**/*.{h,cc}']
-  s.exclude_files = ['core/include/core/napi/v8','core/src/napi/v8','core/js']
+  s.source_files = ['ios/sdk/**/*.{h,m,c,mm,s,cpp,cc}']
   s.libraries    = "c++"
   s.ios.deployment_target = '8.0'
-  s.xcconfig = {'HEADER_SEARCH_PATHS' => '"${PODS_ROOT}/hippy" "${PODS_ROOT}/hippy/ios/sdk/**" "${PODS_ROOT}/hippy/core/include"'}
-  s.header_mappings_dir = 'core/include/'
+  s.xcconfig = {'USER_HEADER_SEARCH_PATHS' => '${PODS_ROOT}/hippy ${PODS_ROOT}/hippy/ios/sdk/** ${PODS_ROOT}/hippy/core/include'}
+  s.default_subspec = 'core'
+  s.subspec 'core' do |ss|
+      ss.source_files =  'core/**/*.{h,cc}'
+      ss.exclude_files = ['core/include/core/napi/v8','core/src/napi/v8','core/js']
+      ss.libraries  = "c++"
+      ss.header_mappings_dir = 'core/include/'
+      ss.xcconfig = {'HEADER_SEARCH_PATHS' => '${PODS_ROOT}/hippy/core/include'}
+  end
+
   if ENV['hippy_use_frameworks']
   else
     s.user_target_xcconfig = {'OTHER_LDFLAGS' => '-force_load "${PODS_CONFIGURATION_BUILD_DIR}/hippy/libhippy.a"'}
